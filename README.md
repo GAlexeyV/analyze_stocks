@@ -8,7 +8,7 @@ The project is built from two main components:
 - a front-end that utilizes Plotly and Dash to visualize the gathered data on
   interactive charts
 
-We use Celery backed by Redis as the message broker and QuestDB as storage to periodically fetch data.
+Celery backed by Redis used as the message broker.
 
 
 ### Prerequisites
@@ -20,32 +20,11 @@ We use Celery backed by Redis as the message broker and QuestDB as storage to pe
 
 ### Installing QuestDB & Redis
 
-To install the services required for our project, we are using Docker and Docker
-Compose. Within the project root, create a file, called docker-compose.yml. 
-
-```yaml
-version: "3"
-
-volumes:
-  questdb_data: {}
-
-services:
-  redis:
-    image: "redis:latest"
-    ports:
-      - "6379:6379"
-
-  questdb:
-    image: "questdb/questdb:latest"
-    volumes:
-      - questdb_data:/root/.questdb/db
-    ports:
-      - "9000:9000"
-      - "8812:8812"
-```
+To install the services required for our project, Docker and Docker
+Compose used. 
 
 When run `docker-compose up`, DB and Redis will fire up.
-We can access DB interactive console on
+Can access DB interactive console on
 [http://127.0.0.1:9000](http://127.0.0.1:9000/).
 
 ### Create the database table
@@ -58,8 +37,8 @@ CREATE TABLE
              low_price DOUBLE,
              open_price DOUBLE,
              percent_change DOUBLE,
-             tradets TIMESTAMP, -- timestamp of the trade
-             ts TIMESTAMP)      -- time of insert in our table
+             tradets TIMESTAMP, 
+             ts TIMESTAMP)      
       timestamp(ts)
 PARTITION BY DAY;
 ```
@@ -94,7 +73,7 @@ python -m celery --app app.worker.celery_app worker --beat -l info -c 1
 
  ### Run dashboard
 
-Make sure that the Docker containers are started and execute `PYTHONPATH=. python app/main.py` from
+Docker containers should be started then execute `PYTHONPATH=. python app/main.py` from
 the project root:
 
 ```shell
